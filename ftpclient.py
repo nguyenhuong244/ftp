@@ -56,33 +56,25 @@ with FTP(host) as ftp:
                     print("Thu muc khong ton tai")
             
             elif answer[0] == "dl":
-                key = input("Ban co muon filter du lieu: ")
-                # with open(answer[1],'wb') as filefilter:
-                if (key == "co" or key == "yes"):
-                        filefilter = open(answer[1], 'wb+')
-                        ftp.retrbinary('RETR '+ answer[1], filefilter.write, 1024)
-                        # f = open(filefilter,'rb')
-                        # filterfile = open(filefilter,'wb')
-                        # ftp.retrbinary('RETR '+ filter, filter.write, 1024)
-                        filter_text = input("Nhap du lieu ban muon filter: ")
-                        filter = open(f"{filter_text}.txt",'ab+')
-                        for texts in f:
-                            if filter_text in texts:
-                                filter.writelines(texts)
-                                # ftp.retrbinary('RETR '+ filter, filter.write, 1024)
-                else:
-                    with open(answer[1], 'wb') as f:
-                        try:
-                            print(f'Dang tai {answer[1]} ve may')
-                            ftp.retrbinary('RETR '+ answer[1], f.write, 1024)
-                            print(f'Tai file {answer[1]} thanh cong')
-                        except:
-                            print(f'Khong the tai {answer[1]} ve may')
+                with open(answer[1], 'wb') as f:
+                    try:
+                        ftp.retrbinary('RETR '+ answer[1], f.write, 1024)
+                        print(f'Tai file {answer[1]} thanh cong')
+                    except:
+                        print(f'Khong the tai {answer[1]} ve may')
+
+            elif answer[0] == "filter":
+                filter_file = open(answer[1], "r")
+                filter_text = input("Du lieu can filter: ")
+                filter = open(f"{filter_text}.txt", "a+")
+                for texts in filter_file:
+                    if filter_text in texts:
+                        filter.writelines(texts)
+                        break
 
             elif answer[0] == "ul":
                 with open(answer[1], 'rb') as f:
                     try:
-                        print(f'Dang tai {answer[1]} len server')
                         ftp.storbinary(f'STOR {answer[1]}', f)
                         print(f'Tai file {answer[1]} thanh cong')
                     except:
